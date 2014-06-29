@@ -5,6 +5,9 @@ all: gdb_test glist gprof_test sadstrings dict_test
 
 test: test_gprof test_valgrind test_dict
 
+gdb_test: gdb_test.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -w -o $@ $^
+
 glist: glist.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ \
 		`pkg-config --cflags glib-2.0` $^ `pkg-config --libs glib-2.0`
