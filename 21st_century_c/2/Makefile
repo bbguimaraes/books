@@ -39,4 +39,8 @@ test_dict:
 clean:
 	rm -f gdb_test glist gprof_test profile gmon.out sadstrings dict_test
 	rm -f dict_test.gcda dict_test.gcno dict_test.c.gcov
+	rm -rf doxygen
 	make -C ../11 clean
+
+docs:
+	doxygen
