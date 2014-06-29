@@ -35,12 +35,11 @@ void test_copy(dfixture * df, gconstpointer ignored) {
 }
 
 void test_failure() {
-    // TODO g_test_trap_fork has been deprecated (use g_test_trap_subprocess).
-    if(g_test_trap_fork(
-            0, G_TEST_TRAP_SILENCE_STDOUT | G_TEST_TRAP_SILENCE_STDERR)) {
+    if(g_test_subprocess()) {
         dictionary * dd = dictionary_new();
         dictionary_add(dd, NULL, "blank");
     }
+    g_test_trap_subprocess(NULL, 0, 0);
     g_test_trap_assert_failed();
     g_test_trap_assert_stderr("NULL is not a valid key.\n");
 }
