@@ -3,7 +3,7 @@ CFLAGS = -Wall -g -std=gnu11
 all: gdb_test glist gprof_test sadstrings dict_test
 .PHONY: ../11/dict.a
 
-test: test_gprof test_valgrind test_dict
+test: test_gprof test_valgrind test_dict test_cweb
 
 gdb_test: gdb_test.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -w -o $@ $^
@@ -36,11 +36,23 @@ test_dict:
 	gcov dict_test
 	cat dict_test.c.gcov
 
-clean:
+test_cweb: dict.o dict.pdf
+
+dict.o: dict.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -I ../11 -c $^
+
+dict.pdf: dict.tex
+	pdftex $^
+
+clean: clean_latex
 	rm -f gdb_test glist gprof_test profile gmon.out sadstrings dict_test
 	rm -f dict_test.gcda dict_test.gcno dict_test.c.gcov
 	rm -rf doxygen
 	make -C ../11 clean
+	rm -f dict.c dict.o
+
+clean_latex:
+	rm -f dict.idx dict.log dict.pdf dict.scn dict.tex dict.toc texput.log
 
 docs:
 	doxygen
