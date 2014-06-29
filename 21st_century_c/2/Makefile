@@ -17,6 +17,7 @@ gprof_test: gprof_test.c
 
 dict_test: dict_test.c ../11/dict.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -I../11 `pkg-config --cflags glib-2.0`\
+		-O0 -fprofile-arcs -ftest-coverage \
 		-o $@ dict_test.c ../11/dict.a `pkg-config --libs glib-2.0`
 
 ../11/dict.a:
@@ -32,7 +33,10 @@ test_valgrind:
 
 test_dict:
 	./dict_test
+	gcov dict_test
+	cat dict_test.c.gcov
 
 clean:
 	rm -f gdb_test glist gprof_test profile gmon.out sadstrings dict_test
+	rm -f dict_test.gcda dict_test.gcno dict_test.c.gcov
 	make -C ../11 clean
