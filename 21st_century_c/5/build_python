@@ -1,0 +1,18 @@
+if [ -e autodemo ]; then rm -r autodemo; fi
+mkdir autodemo
+cp ../10/ideal.h ../10/ideal.c py/Makefile.am py/configure.ac autodemo/
+cd autodemo
+touch NEWS README AUTHORS ChangeLog
+mkdir py
+cp ../py/setup.py ../py/ideal.py.c py/
+cp ../py/Makefile.py.am py/Makefile.am
+
+autoreconf -iv
+./configure
+make
+
+ln -s .libs/libpvnrt.so
+cd py
+make
+ln -s build/lib.linux-x86_64-3.4/pypvnrt.cpython-34m.so
+ln -s ../.libs/libpvnrt.so.0
