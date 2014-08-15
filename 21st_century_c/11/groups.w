@@ -67,8 +67,8 @@ void group_exit(group_s * leaveme, gsl_vector * position) {
 distance to the groups. In the end, I wound up using the $L_3$ norm. The
 standard distance is the $L_2$ norm, aka Euclidean distance, meaning that the
 distance between $(x_1, y_1)$ and $(x_2, y_2)$ is
-$\sqrt{(x_1-x_2)^2+(y_1-y_2^2}$. This is $L_3$,
-${\sqrt[3]{(x_1-x_2)^3+(y_1-y_2)^3}$. This and the call to |apop_copy| above are
+$\sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$. This is $L_3$,
+$\sqrt[3]{(x_1-x_2)^3+(y_1-y_2)^3}$. This and the call to |apop_copy| above are
 the only calls to the Apophenia library; you could write around them if you
 don't have that library on hand.
 
