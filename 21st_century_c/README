@@ -1,0 +1,20 @@
+All examples from the book are contained here. Some changes had to be made to
+some of the examples, mainly for style (minor), differences between platforms
+and simplifications.
+
+All examples are compilable and testable. Each directory contains examples from
+the chapter it's named after and they all have Makefiles to build and test each
+example.
+
+The only exception is chapter 12, which requires libapophenia. In order to keep
+this repository simple, it was decided not to include the entire library. So,
+to compile and test the gsl_distance example, the library must be obtained and
+compiled and the Makefile has to be configured (chapter 11 has libapophenia
+dependencies too, but the apropriate files were copied form the library).
+
+When the exception above is dealt with, all examples can be built, tested and
+cleaned with a shell commands:
+
+$ for i in {1..12}; do make -C $i; done
+$ for i in {1..12}; do make -C $i test; done
+$ for i in {1..12}; do make -C $i clean; done
