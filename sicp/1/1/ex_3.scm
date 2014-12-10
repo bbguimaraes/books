@@ -1,0 +1,8 @@
+(define (sum-of-squares x y z)
+  (+ (* x x) (* y y) (* z z)))
+(display (sum-of-squares 1 2 3))
+(define (square x) (* x x))
+(define (sum-of-squares x y z)
+  (+ (square x) (square y) (square z)))
+(newline)
+(display (sum-of-squares 1 2 3))
