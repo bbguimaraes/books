@@ -1,0 +1,27 @@
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x) (lower-bound y))
+                 (+ (upper-bound x) (upper-bound y))))
+
+(define (make-interval a b) (cons a b))
+(define (lower-bound x) (car x))
+(define (upper-bound x) (cdr x))
+
+(define (print-interval i)
+  (display "(")
+  (display (lower-bound i))
+  (display ",")
+  (display (upper-bound i))
+  (display ")"))
+
+(define (sub-interval x y)
+  (make-interval (- (lower-bound x) (lower-bound y))
+                 (- (upper-bound x) (upper-bound y))))
+
+(define i1 (make-interval 6.12 7.48))
+(print-interval i1)
+(newline)
+(define i2 (make-interval 4.46 4.93))
+(print-interval (add-interval i1 i2))
+(newline)
+(print-interval (sub-interval (add-interval i1 i2) i2))
+(newline)
