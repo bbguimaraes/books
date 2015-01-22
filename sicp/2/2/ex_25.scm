@@ -1,0 +1,17 @@
+(define l (list 1 3 (list 5 7) 9))
+(display l)
+(newline)
+(display (car (cdaddr l)))
+(newline)
+
+(define l (list (list 7)))
+(display l)
+(newline)
+(display (caar l))
+(newline)
+
+(define l (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7)))))))
+(display l)
+(newline)
+(display (cadadr (cadadr (cadadr l))))
+(newline)

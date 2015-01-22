@@ -1,0 +1,28 @@
+(define l (list 1 2 3 4 5))
+(display (map square l))
+(newline)
+(display (append l (list 5 4 3 2 1)))
+(newline)
+(display (length l))
+(newline)
+
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+    initial
+    (op (car sequence)
+        (accumulate op initial (cdr sequence)))))
+
+(define nil (cdr (list 0)))
+(define (map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+(define (append seq1 seq2)
+  (accumulate cons seq2 seq1))
+(define (length sequence)
+  (accumulate (lambda (x result) (+ result 1)) 0 sequence))
+
+(display (map square l))
+(newline)
+(display (append l (list 5 4 3 2 1)))
+(newline)
+(display (length l))
+(newline)
