@@ -1,0 +1,12 @@
+(define (same-parity . l)
+  (define (iter p l)
+    (cond ((null? l) l)
+          ((= (remainder (car l) 2) p)
+           (cons (car l) (iter p (cdr l))))
+          (else (iter p (cdr l)))))
+  (iter (remainder (car l) 2) l))
+
+(display (same-parity 1 2 3 4 5 6 7))
+(newline)
+(display (same-parity 2 3 4 5 6 7))
+(newline)
