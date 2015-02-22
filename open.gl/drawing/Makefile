@@ -1,9 +1,14 @@
 CPPFLAGS = -std=c++11 -I..
-all: colors drawing element uniforms
-colors:   colors.cpp   ../common.h ../common.o -lglfw -lGLEW -lGLU -lGL
-drawing:  drawing.cpp  ../common.h ../common.o -lglfw -lGLEW -lGLU -lGL
-element:  element.cpp  ../common.h ../common.o -lglfw -lGLEW -lGLU -lGL
-uniforms: uniforms.cpp ../common.h ../common.o -lglfw -lGLEW -lGLU -lGL
+COMMON = ../common.h ../common.o
+LIBRARIES = -lglfw -lGLEW -lGLU -lGL
+all: colors drawing element ex1 ex2 ex3 uniforms
+colors:   colors.cpp   ${COMMON} ${LIBRARIES}
+drawing:  drawing.cpp  ${COMMON} ${LIBRARIES}
+element:  element.cpp  ${COMMON} ${LIBRARIES}
+ex1:      ex1.cpp      ${COMMON} ${LIBRARIES}
+ex2:      ex2.cpp      ${COMMON} ${LIBRARIES}
+ex3:      ex3.cpp      ${COMMON} ${LIBRARIES}
+uniforms: uniforms.cpp ${COMMON} ${LIBRARIES}
 .PHONY: clean
 clean:
-	rm -f colors drawing element uniforms
+	rm -f colors drawing element ex1 ex2 ex3 uniforms
