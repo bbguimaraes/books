@@ -13,6 +13,7 @@ void init_glew_or_exit();
 void exit_on_gl_error();
 GLuint create_vao();
 GLuint create_vbo(size_t size, float vertices[]);
+GLuint create_ebo(size_t size, unsigned int elements[]);
 GLuint create_shader(const GLchar * src, GLenum type);
 GLuint create_shader_or_exit(const GLchar * src, GLenum type);
 void check_shader_or_exit(GLuint id);
