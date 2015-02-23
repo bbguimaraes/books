@@ -59,6 +59,14 @@ GLuint create_vbo(size_t size, float vertices[]) {
     return vbo;
 }
 
+GLuint create_ebo(size_t size, unsigned int elements[]) {
+    GLuint ebo;
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, elements, GL_STATIC_DRAW);
+    return ebo;
+}
+
 GLuint create_shader(const GLchar * src, GLenum type) {
     GLuint id = glCreateShader(type);
     glShaderSource(id, 1, &src, NULL);

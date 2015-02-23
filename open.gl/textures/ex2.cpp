@@ -1,11 +1,14 @@
 #include "common.h"
+#include "texture_common.h"
 
+#include <SOIL/SOIL.h>
 
 float vertices[] = {
-    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
-     0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+    // pos        texcoords
+    -0.5f,  0.5f, 0.0f, 0.0f,
+     0.5f,  0.5f, 1.0f, 0.0f,
+     0.5f, -0.5f, 1.0f, 1.0f,
+    -0.5f, -0.5f, 0.0f, 1.0f,
 };
 
 GLuint elements[] = {
@@ -17,23 +20,35 @@ const GLchar * vertex_shader_src =
     "#version 150 core\n"
     "\n"
     "in vec2 position;\n"
-    "in vec3 color;\n"
+    "in vec2 texcoord;\n"
     "\n"
-    "out vec3 Color;\n"
+    "out vec2 Texcoord;\n"
     "\n"
     "void main() {\n"
-    "    Color = color;\n"
+    "    Texcoord = texcoord;\n"
     "    gl_Position = vec4(position, 0.0, 1.0);\n"
     "}\n";
 
 const GLchar * frag_shader_src =
     "#version 150 core\n"
     "\n"
-    "in vec3 Color;\n"
+    "in vec2 Texcoord;\n"
+    "\n"
     "out vec4 outColor;\n"
     "\n"
+    "uniform sampler2D texKitten;\n"
+    "uniform sampler2D texPuppy;\n"
+    "\n"
     "void main() {\n"
-    "    outColor = vec4(Color, 1.0);\n"
+    "    if(Texcoord.y >= 0.5)\n"
+    "        outColor = texture(\n"
+    "            texKitten, vec2(Texcoord.x, 1.0 - Texcoord.y));\n"
+    "    else {\n"
+    "        vec4 colKitten = texture(texKitten, Texcoord);\n"
+    "        vec4 colPuppy = texture(texPuppy, Texcoord);\n"
+    "        outColor = mix(colKitten, colPuppy, 0.5)\n"
+    "            * vec4(1.0, 1.0, 1.0, 1.0);\n"
+    "    }\n"
     "}\n";
 
 int main() {
@@ -49,12 +64,16 @@ int main() {
     GLint pos_attr = glGetAttribLocation(program, "position");
     glEnableVertexAttribArray(pos_attr);
     glVertexAttribPointer(
-        pos_attr, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
-    GLint col_attr = glGetAttribLocation(program, "color");
-    glEnableVertexAttribArray(col_attr);
+        pos_attr, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    GLint tex_attr = glGetAttribLocation(program, "texcoord");
+    glEnableVertexAttribArray(tex_attr);
     glVertexAttribPointer(
-        col_attr, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+        tex_attr, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
         reinterpret_cast<void *>(2 * sizeof(float)));
+    GLint tex = create_texture_from_image("../sample.png", GL_TEXTURE0);
+    glUniform1i(glGetUniformLocation(program, "texKitten"), 0);
+    tex = create_texture_from_image("../sample2.png", GL_TEXTURE1);
+    glUniform1i(glGetUniformLocation(program, "texPuppy"), 1);
     while(!glfwWindowShouldClose(window)) {
         glfwSwapBuffers(window);
         glfwPollEvents();
