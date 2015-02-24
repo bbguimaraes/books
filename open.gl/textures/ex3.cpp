@@ -1,5 +1,4 @@
 #include "common.h"
-#include "texture_common.h"
 
 #include <ctime> // clock, CLOCKS_PER_SEC
 #include <SOIL/SOIL.h>

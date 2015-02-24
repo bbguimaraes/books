@@ -1,5 +1,4 @@
 #include "common.h"
-#include "texture_common.h"
 
 #include <SOIL/SOIL.h>
 

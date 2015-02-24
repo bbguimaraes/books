@@ -1,5 +1,4 @@
 #include "common.h"
-#include "texture_common.h"
 
 float vertices[] = {
     // pos        color             texcoords

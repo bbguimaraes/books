@@ -5,6 +5,81 @@
 
 #include <GL/glu.h>
 #include <GLFW/glfw3.h>
+#include <SOIL/SOIL.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+const unsigned int SQUARE_VERTICES_COUNT = 16;
+
+const float SQUARE_VERTICES[] = {
+    // pos        texcoords
+    -0.5f,  0.5f, 0.0f, 0.0f,
+     0.5f,  0.5f, 1.0f, 0.0f,
+     0.5f, -0.5f, 1.0f, 1.0f,
+    -0.5f, -0.5f, 0.0f, 1.0f,
+};
+
+const unsigned int SQUARE_ELEMENTS_COUNT = 6;
+
+const GLuint SQUARE_ELEMENTS[] = {
+    0, 1, 2,
+    2, 3, 0,
+};
+
+const unsigned int CUBE_VERTICES_COUNT = 336;
+
+const float CUBE_VERTICES[] = {
+    // pos               color             texcoords
+    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+
+    -1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+     1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+     1.0f,  1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+     1.0f,  1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+    -1.0f,  1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+};
 
 GLFWwindow * init() {
     glfwInit();
@@ -51,7 +126,7 @@ GLuint create_vao() {
     return vao;
 }
 
-GLuint create_vbo(size_t size, float vertices[]) {
+GLuint create_vbo(size_t size, const float vertices[]) {
     GLuint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -59,7 +134,7 @@ GLuint create_vbo(size_t size, float vertices[]) {
     return vbo;
 }
 
-GLuint create_ebo(size_t size, unsigned int elements[]) {
+GLuint create_ebo(size_t size, const unsigned int elements[]) {
     GLuint ebo;
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -106,4 +181,66 @@ GLuint create_program(GLuint vertex_shader, GLuint frag_shader) {
     glLinkProgram(program);
     glUseProgram(program);
     return program;
+}
+
+GLint create_texture_from_image(const char * filename, GLenum object) {
+    GLuint tex;
+    glActiveTexture(object);
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    int width, height;
+    unsigned char * image = SOIL_load_image(
+        filename, &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+        GL_RGB, GL_UNSIGNED_BYTE, image);
+    SOIL_free_image_data(image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    return tex;
+}
+
+void setup_projection(GLuint program) {
+    glm::mat4 view = glm::lookAt(
+        glm::vec3(1.2f, 1.2f, 1.2f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f));
+    GLint view_uni = glGetUniformLocation(program, "view");
+    glUniformMatrix4fv(view_uni, 1, GL_FALSE, glm::value_ptr(view));
+    glm::mat4 proj = glm::perspective(45.0f, 800.0f / 600.0f, 1.0f, 10.0f);
+    GLint proj_uni = glGetUniformLocation(program, "proj");
+    glUniformMatrix4fv(proj_uni, 1, GL_FALSE, glm::value_ptr(proj));
+}
+
+float generate_angle(clock_t c, clock_t cs) {
+    return static_cast<float>(c) / cs * 25.0f * glm::radians(180.0f);
+}
+
+void draw_scene(float angle, GLint model_uni, GLint ov_col_uni) {
+    glm::mat4 model;
+    model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+    glUniformMatrix4fv(model_uni, 1, GL_FALSE, glm::value_ptr(model));
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glStencilMask(0xFF);
+    glDepthMask(GL_FALSE);
+    glClear(GL_STENCIL_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 36, 6);
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDepthMask(GL_TRUE);
+    model = glm::scale(
+        glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f)),
+        glm::vec3(1.0f, 1.0f, -1.0f));
+    glUniformMatrix4fv(model_uni, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform3f(ov_col_uni, 0.3f, 0.3f, 0.3f);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glUniform3f(ov_col_uni, 1.0f, 1.0f, 1.0f);
+    glDisable(GL_STENCIL_TEST);
 }
