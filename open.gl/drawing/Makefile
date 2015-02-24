@@ -1,6 +1,6 @@
 CPPFLAGS = -std=c++11 -I..
 COMMON = ../common.h ../common.o
-LIBRARIES = -lglfw -lGLEW -lGLU -lGL
+LIBRARIES = -lSOIL -lglfw -lGLEW -lGLU -lGL
 all: colors drawing element ex1 ex2 ex3 uniforms
 colors:   colors.cpp   ${COMMON} ${LIBRARIES}
 drawing:  drawing.cpp  ${COMMON} ${LIBRARIES}

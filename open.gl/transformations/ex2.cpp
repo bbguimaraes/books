@@ -1,5 +1,5 @@
 #include "common.h"
-#include "texture_common.h"
+#include "transformations_common.h"
 
 #include <ctime> // CLOCKS_PER_SEC
 
@@ -7,19 +7,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <SOIL/SOIL.h>
-
-float vertices[] = {
-    // pos        texcoords
-    -0.5f,  0.5f, 0.0f, 0.0f,
-     0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f, 1.0f, 1.0f,
-    -0.5f, -0.5f, 0.0f, 1.0f,
-};
-
-GLuint elements[] = {
-    0, 1, 2,
-    2, 3, 0,
-};
 
 const GLchar * vertex_shader_src =
     "#version 150 core\n"
@@ -38,46 +25,21 @@ const GLchar * vertex_shader_src =
     "    gl_Position = proj * view * model * vec4(position, 0.0, 1.0);\n"
     "}\n";
 
-const GLchar * frag_shader_src =
-    "#version 150 core\n"
-    "\n"
-    "in vec2 Texcoord;\n"
-    "\n"
-    "out vec4 outColor;\n"
-    "\n"
-    "uniform sampler2D texKitten;\n"
-    "uniform sampler2D texPuppy;\n"
-    "\n"
-    "void main() {\n"
-    "    vec4 colKitten = texture(texKitten, Texcoord);\n"
-    "    vec4 colPuppy = texture(texPuppy, Texcoord);\n"
-    "    outColor = mix(colKitten, colPuppy, 0.5)\n"
-    "        * vec4(1.0, 1.0, 1.0, 1.0);\n"
-    "}\n";
-
 int main() {
     GLFWwindow * window = init();
     create_vao();
-    create_vbo(sizeof(vertices), vertices);
-    create_ebo(sizeof(elements), elements);
+    create_vbo(
+        SQUARE_VERTICES_COUNT * sizeof(SQUARE_VERTICES[0]),
+        SQUARE_VERTICES);
+    create_ebo(
+        SQUARE_ELEMENTS_COUNT * sizeof(SQUARE_ELEMENTS[0]),
+        SQUARE_ELEMENTS);
     GLuint vertex_shader = create_shader_or_exit(
         vertex_shader_src, GL_VERTEX_SHADER);
     GLuint frag_shader = create_shader_or_exit(
-        frag_shader_src, GL_FRAGMENT_SHADER);
+        FRAG_SHADER_SRC, GL_FRAGMENT_SHADER);
     GLuint program = create_program(vertex_shader, frag_shader);
-    GLint pos_attr = glGetAttribLocation(program, "position");
-    glEnableVertexAttribArray(pos_attr);
-    glVertexAttribPointer(
-        pos_attr, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-    GLint tex_attr = glGetAttribLocation(program, "texcoord");
-    glEnableVertexAttribArray(tex_attr);
-    glVertexAttribPointer(
-        tex_attr, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-        reinterpret_cast<void *>(2 * sizeof(float)));
-    GLint tex = create_texture_from_image("../sample.png", GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(program, "texKitten"), 0);
-    tex = create_texture_from_image("../sample2.png", GL_TEXTURE1);
-    glUniform1i(glGetUniformLocation(program, "texPuppy"), 1);
+    setup_shader_attrs(program);
     glm::mat4 view = glm::lookAt(
         glm::vec3(1.2f, 1.2f, 1.2f),
         glm::vec3(0.0f, 0.0f, 0.0f),

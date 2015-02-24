@@ -1,5 +1,7 @@
 CPPFLAGS = -std=c++11 -I..
-COMMON = ../common.h ../common.o ../texture_common.h ../texture_common.o
+COMMON = \
+    ../common.h ../common.o \
+    ../transformations_common.h ../transformations_common.o
 LIBRARIES = -lSOIL -lglfw -lGLEW -lGLU -lGL
 all: 3d ex1 ex2 transformations
 3d:              3d.cpp              ${COMMON} ${LIBRARIES}
