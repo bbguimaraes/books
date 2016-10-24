@@ -1,0 +1,13 @@
+(define (adjoin-set x set)
+  (if (or (null? set)
+          (< x (car set)))
+    (cons x set)
+    (cons (car set) (adjoin-set x (cdr set)))))
+
+(define s (list 1 2 3 4 5))
+(display (adjoin-set 0 s))
+(newline)
+(display (adjoin-set 4 s))
+(newline)
+(display (adjoin-set 31415 s))
+(newline)

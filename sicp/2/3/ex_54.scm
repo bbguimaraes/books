@@ -1,0 +1,15 @@
+(display (equal? '(this is a list) '(this is a list)))
+(newline)
+(display (equal? '(this is a list) '(this (is a) list)))
+(newline)
+
+(define (equal? x y)
+  (if (and (pair? x) (pair? y))
+    (and (equal? (car x) (car y))
+         (equal? (cdr x) (cdr y)))
+    (eq? x y)))
+
+(display (equal? '(this is a list) '(this is a list)))
+(newline)
+(display (equal? '(this is a list) '(this (is a) list)))
+(newline)

@@ -1,0 +1,15 @@
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (successive-merge pairs)
+  (define (ordered-insert x set)
+    (cond ((null? set) (list x))
+          ((< (weight x) (weight (car set))) (cons x set))
+          (else (cons (car set) (ordered-insert x (cdr set))))))
+  (let ((first-pair (car pairs))
+        (second-pair (cadr pairs))
+        (tail (cddr pairs)))
+    (let ((new-pair (make-code-tree first-pair second-pair)))
+      (if (null? tail)
+        new-pair
+        (successive-merge (ordered-insert new-pair tail))))))
