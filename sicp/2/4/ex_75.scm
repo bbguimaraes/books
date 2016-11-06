@@ -1,0 +1,22 @@
+(define (make-from-mag-ang r a)
+  (define (dispatch op)
+    (cond
+      ((eq? op 'real-part) (* r (cos a)))
+      ((eq? op 'imag-part) (* r (sin a)))
+      ((eq? op 'magnitude) r)
+      ((eq? op 'angle) a)
+      (else (error "Unknown op -- MAKE-FROM-MAG-ANG" op))))
+  dispatch)
+(define (apply-generic op arg) (arg op))
+(define (real-part z) (apply-generic 'real-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+
+
+(newline)
+(let ((x (make-from-mag-ang 3 4)))
+  (display x)
+  (newline)
+  (display (real-part x))
+  (newline)
+  (display (magnitude x))
+  (newline))
