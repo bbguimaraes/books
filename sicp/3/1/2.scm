@@ -1,0 +1,55 @@
+(define one-arbitrary-number 9999999)
+(define another-arbitrary-number 200000)
+(define random-init (random one-arbitrary-number))
+(define (rand-update x) (random one-arbitrary-number))
+
+(define rand
+  (let ((x random-init))
+    (lambda ()
+      (set! x (rand-update x))
+      x)))
+
+(display (rand))
+(newline)
+(display (rand))
+(newline)
+(display (rand))
+(newline)
+
+(define (estimate-pi trials)
+  (sqrt (/ 6 (monte-carlo trials cesaro-test))))
+(define (cesaro-test)
+  (= (gcd (rand) (rand)) 1))
+(define (monte-carlo trials experiment)
+  (define (iter trials-remaining trials-passed)
+    (cond ((= trials-remaining 0)
+           (/ trials-passed trials))
+          ((experiment)
+           (iter (- trials-remaining 1) (+ trials-passed 1)))
+          (else
+            (iter (- trials-remaining 1) trials-passed))))
+  (iter trials 0))
+
+(display (estimate-pi another-arbitrary-number))
+(newline)
+
+(define (estimate-pi trials)
+  (sqrt (/ 7 (random-gcd-test trials random-init))))
+(define (random-gcd-test trials initial-x)
+  (define (iter trials-remaining trials-passed x)
+    (let ((x1 (rand-update x)))
+      (let ((x2 (rand-update x1)))
+        (cond ((= trials-remaining 0)
+               (/ trials-passed trials))
+              ((= (gcd x1 x2) 1)
+               (iter (- trials-remaining 1)
+                     (+ trials-passed 1)
+                     x2))
+              (else
+                (iter (- trials-remaining 1)
+                      trials-passed
+                      x2))))))
+  (iter trials 0 initial-x))
+
+(display (estimate-pi another-arbitrary-number))
+(newline)
