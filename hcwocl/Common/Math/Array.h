@@ -4,8 +4,10 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+#include <cstdlib>
 #include <string.h>
 #include <malloc.h>
+
 #include <Common/Base/Error.h>
 
 template <class T>
@@ -64,7 +66,7 @@ Array<T>::Array()
 	m_size = 0;
 	m_capacity = DEFAULT_SIZE;
 //	m_data = new T[ m_capacity ];
-	m_data = (T*)_aligned_malloc(sizeof(T)*m_capacity, 16);
+	m_data = static_cast<T*>(std::aligned_alloc(16, sizeof(T) * m_capacity));
 	for(int i=0; i<m_capacity; i++) new(&m_data[i])T;
 }
 
@@ -74,7 +76,7 @@ Array<T>::Array(int size)
 	m_size = size;
 	m_capacity = size;
 //	m_data = new T[ m_capacity ];
-	m_data = (T*)_aligned_malloc(sizeof(T)*m_capacity, 16);
+	m_data = static_cast<T*>(std::aligned_alloc(16, sizeof(T) * m_capacity));
 	for(int i=0; i<m_capacity; i++) new(&m_data[i])T;
 }
 
@@ -84,7 +86,7 @@ Array<T>::~Array()
 	if( m_data )
 	{
 //		delete [] m_data;
-		_aligned_free( m_data );
+		std::free(m_data);
 		m_data = NULL;
 	}
 }
@@ -111,10 +113,10 @@ void Array<T>::pushBack(const T& elem)
 		int oldCap = m_capacity;
 		m_capacity += INCREASE_SIZE;
 //		T* s = new T[m_capacity];
-		T* s = (T*)_aligned_malloc(sizeof(T)*m_capacity, 16);
+		T* s = static_cast<T*>(std::aligned_alloc(16, sizeof(T) * m_capacity));
 		memcpy( s, m_data, sizeof(T)*oldCap );
 //		delete [] m_data;
-		_aligned_free( m_data );
+		std::free(m_data);
 		m_data = s;
 	}
 	m_data[ m_size++ ] = elem;
@@ -141,11 +143,11 @@ void Array<T>::setSize(int size)
 		int oldCap = m_capacity;
 		m_capacity = size;
 //		T* s = new T[m_capacity];
-		T* s = (T*)_aligned_malloc(sizeof(T)*m_capacity, 16);
+		T* s = static_cast<T*>(std::aligned_alloc(16, sizeof(T) * m_capacity));
 		for(int i=0; i<m_capacity; i++) new(&s[i])T;
 		memcpy( s, m_data, sizeof(T)*oldCap );
 //		delete [] m_data;
-		_aligned_free( m_data );
+		std::free(m_data);
 		m_data = s;
 	}
 	m_size = size;

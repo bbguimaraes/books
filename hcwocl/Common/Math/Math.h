@@ -4,7 +4,7 @@
 #ifndef CL_MATH_H
 #define CL_MATH_H
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <math.h>
 #include <float.h>
 #include <xmmintrin.h>
@@ -17,16 +17,13 @@
 #define PI       3.14159265358979323846f
 #define NEXTMULTIPLEOF(num, alignment) (((num)/(alignment) + (((num)%(alignment)==0)?0:1))*(alignment))
 
-
-#define _MEM_CLASSALIGN16 __declspec(align(16))
-#define _MEM_ALIGNED_ALLOCATOR16 	void* operator new(size_t size) { return _aligned_malloc( size, 16 ); } \
-	void operator delete(void *p) { _aligned_free( p ); } \
-	void* operator new[](size_t size) { return _aligned_malloc( size, 16 ); } \
-	void operator delete[](void *p) { _aligned_free( p ); } \
+#define _MEM_ALIGNED_ALLOCATOR16 \
+	void* operator new(size_t size) { return std::aligned_alloc(16, size); } \
+	void operator delete(void *p) { std::free(p); } \
+	void* operator new[](size_t size) { return std::aligned_alloc(16, size); } \
+	void operator delete[](void *p) { std::free(p); } \
 	void* operator new(size_t size, void* p) { return p; } \
-	void operator delete(void *p, void* pp) {} 
-
-
+	void operator delete(void *p, void* pp) {}
 
 template<class T>
 T nextPowerOf2(T n)
@@ -37,9 +34,7 @@ T nextPowerOf2(T n)
 	return n+1;
 }
 
-
-_MEM_CLASSALIGN16
-struct float4
+struct alignas(16) float4
 {
 	_MEM_ALIGNED_ALLOCATOR16;
 	union
@@ -56,8 +51,7 @@ struct float4
 	};
 };
 
-_MEM_CLASSALIGN16
-struct int4
+struct alignas(16) int4
 {
 	_MEM_ALIGNED_ALLOCATOR16;
 	union

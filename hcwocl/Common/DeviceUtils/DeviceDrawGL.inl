@@ -175,7 +175,7 @@ void glDraw3DStrings(float value, const float4& pos)
 	glDisable(GL_LIGHTING);
 
 	char valueChar[128];
-	sprintf_s(valueChar, "%3.2f", value);
+	std::snprintf(valueChar, sizeof(valueChar), "%3.2f", value);
 	glDraw3DStrings(valueChar, pos);
 
 	glEnable(GL_LIGHTING);

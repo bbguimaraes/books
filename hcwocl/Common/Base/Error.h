@@ -9,8 +9,8 @@
 #endif
 
 #ifdef _DEBUG
-	#include <assert.h>
-	#define CLASSERT(x) if(!(x)){__debugbreak(); }
+	#include <cassert>
+	#define CLASSERT(x) assert((x))
 #else
 	#define CLASSERT(x) if(x){}
 #endif

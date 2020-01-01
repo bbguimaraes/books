@@ -4,14 +4,9 @@
 #ifndef STOPWATCH_H
 #define STOPWATCH_H
 
-#include <time.h>
-
 class Stopwatch
 {
 	public:
-		__inline
-		Stopwatch();
-
 		__inline
 		void start();
 		__inline
@@ -30,30 +25,22 @@ class Stopwatch
 		{
 			CAPACITY = 64,
 		};
-
-		LARGE_INTEGER m_frequency;
-		LARGE_INTEGER m_t[CAPACITY];
+		std::chrono::system_clock::time_point m_t[CAPACITY];
 	public:
 		int m_idx;
 };
 
 __inline
-Stopwatch::Stopwatch()
-{
-	QueryPerformanceFrequency( &m_frequency );
-}
-
-__inline
 void Stopwatch::start()
 {
 	m_idx = 0;
-	QueryPerformanceCounter(&m_t[m_idx++]);
+	split();
 }
 
 __inline
 void Stopwatch::split()
 {
-	QueryPerformanceCounter(&m_t[m_idx++]);
+	m_t[m_idx++] = std::chrono::system_clock::now();
 }
 
 __inline
@@ -65,18 +52,17 @@ void Stopwatch::stop()
 __inline
 float Stopwatch::getMs()
 {
-	return (float)(1000*(m_t[1].QuadPart - m_t[0].QuadPart))/m_frequency.QuadPart;
+	using T = std::chrono::duration<float, std::milli>;
+	return std::chrono::duration_cast<T>(m_t[1] - m_t[0]).count();
 }
 
 __inline
 void Stopwatch::getMs(float* times, int capacity)
 {
 	for(int i=0; i<capacity; i++) times[i] = 0.f;
-
+	using T = std::chrono::duration<float, std::milli>;
 	for(int i=0; i<min2(capacity, m_idx-1); i++)
-	{
-		times[i] = (float)(1000*(m_t[i+1].QuadPart - m_t[i].QuadPart))/m_frequency.QuadPart;
-	}
+		times[i] = std::chrono::duration_cast<T>(m_t[i+1] - m_t[i]).count();
 }
 
 

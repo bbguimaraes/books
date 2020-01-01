@@ -1,6 +1,8 @@
 /*
 		2011 Takahiro Harada
 */
+#include <chrono>
+#include <cstdint>
 #include <cstring>
 #include <stdio.h>
 #include <fstream>
@@ -339,10 +341,13 @@ KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, char* file
 	char fileNameWithExtension[256];
 
 	if( addExtension )
-		sprintf_s( fileNameWithExtension, "%s.cl", fileName );
+		std::snprintf(
+			fileNameWithExtension, sizeof(fileNameWithExtension),
+			"%s.cl", fileName);
 	else
-		sprintf_s( fileNameWithExtension, "%s", fileName );
-	
+		std::snprintf(
+			fileNameWithExtension, sizeof(fileNameWithExtension),
+			"%s", fileName);
 
 	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
@@ -601,7 +606,7 @@ struct StopwatchCL
 			CAPACITY = 64,
 		};
 		const DeviceDataBase* m_deviceData;
-		LARGE_INTEGER m_t[CAPACITY];
+		std::chrono::system_clock::time_point m_t[CAPACITY];
 		int m_idx;
 };
 
@@ -629,7 +634,7 @@ void StopwatchCL::start()
 void StopwatchCL::split()
 {
 	DeviceUtilsCL::waitForCompletion( m_deviceData );
-	QueryPerformanceCounter(&m_t[m_idx++]);
+	m_t[m_idx++] = std::chrono::system_clock::now();
 }
 
 void StopwatchCL::stop()
@@ -639,20 +644,14 @@ void StopwatchCL::stop()
 
 float StopwatchCL::getMs()
 {
-	LARGE_INTEGER m_frequency;
-	QueryPerformanceFrequency( &m_frequency );
-	return (float)(1000*(m_t[1].QuadPart - m_t[0].QuadPart))/m_frequency.QuadPart;
+	using T = std::chrono::duration<float, std::milli>;
+	return std::chrono::duration_cast<T>(m_t[1] - m_t[0]).count();
 }
 
 void StopwatchCL::getMs( float* times, int capacity )
 {
-	LARGE_INTEGER m_frequency;
-	QueryPerformanceFrequency( &m_frequency );
-
 	for(int i=0; i<capacity; i++) times[i] = 0.f;
-
-	for(int i=0; i<min2(capacity, m_idx); i++)
-	{
-		times[i] = (float)(1000*(m_t[i+1].QuadPart - m_t[i].QuadPart))/m_frequency.QuadPart;
-	}
+	using T = std::chrono::duration<float, std::milli>;
+	for(int i=0; i<min2(capacity, m_idx-1); i++)
+		times[i] = std::chrono::duration_cast<T>(m_t[i+1] - m_t[i]).count();
 }

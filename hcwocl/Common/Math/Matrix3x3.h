@@ -10,8 +10,7 @@
 //	Matrix3x3
 ///////////////////////////////////////
 
-typedef 
-_MEM_CLASSALIGN16 struct
+typedef struct alignas(16) Matrix3x3
 {
 	_MEM_ALIGNED_ALLOCATOR16;
 	float4 m_row[3];

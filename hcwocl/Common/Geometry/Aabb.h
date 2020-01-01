@@ -7,8 +7,7 @@
 #include <Common/Math/Math.h>
 #include <Common/Math/Quaternion.h>
 
-_MEM_CLASSALIGN16
-struct Aabb
+struct alignas(16) Aabb
 {
 	public:
 		_MEM_ALIGNED_ALLOCATOR16;

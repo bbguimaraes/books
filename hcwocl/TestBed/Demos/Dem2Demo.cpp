@@ -764,8 +764,8 @@ void Dem2Demo::step( float dt )
 
 			m_nTxtLines = 0;
 			{
-				sprintf_s(m_txtBuffer[m_nTxtLines++], LINE_CAPACITY, "S:%d, L:%d", m_numSParticles, m_numLParticles);
-				sprintf_s(m_txtBuffer[m_nTxtLines++], LINE_CAPACITY, "Total : %3.3f", tg);
+				std::snprintf(m_txtBuffer[m_nTxtLines++], LINE_CAPACITY, "S:%d, L:%d", m_numSParticles, m_numLParticles);
+				std::snprintf(m_txtBuffer[m_nTxtLines++], LINE_CAPACITY, "Total : %3.3f", tg);
 			}
 		}
 	}
