@@ -26,7 +26,7 @@ public:
 	class Builder : public KernelBuilder<KERNEL>
 	{
 	public:
-		Builder( const DeviceDataBase* deviceData, char* fileName, const char* option = NULL, bool addExtension = false ): KernelBuilder<KERNEL>(deviceData, fileName, option, addExtension){}
+		Builder( const DeviceDataBase* deviceData, const char* fileName, const char* option = NULL, bool addExtension = false ): KernelBuilder<KERNEL>(deviceData, fileName, option, addExtension){}
 	};
 
 	class Launcher : public KernelLauncher<BUFFER, KERNEL>

@@ -26,9 +26,9 @@ UniformGrid<DEVICEBUFFER,DEVICEKERNEL>::UniformGrid( const DeviceDataBase* devic
 	}
 
 	{
-		const char *option = "-I ..\\";
+		const char *option = "-I ../";
 
-		typename DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Builder builder( m_deviceData, "Demos\\UniformGridKernels", option, true );
+		typename DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Builder builder( m_deviceData, "Demos/UniformGridKernels", option, true );
 		builder.createKernel("GridClearKernel", m_gridClearKernel );
 		builder.createKernel("GridConstructionKernel", m_gridConstructionKernel );
 	}

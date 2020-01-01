@@ -91,7 +91,7 @@ class KernelBuilder
 {
 	public:
 		__inline
-		KernelBuilder( const DeviceDataBase* deviceData, char* fileName, const char* option = NULL, bool addExtension = false );
+		KernelBuilder( const DeviceDataBase* deviceData, const char* fileName, const char* option = NULL, bool addExtension = false );
 
 		__inline
 		void createKernel( const char* funcName, KERNEL& kernelOut );

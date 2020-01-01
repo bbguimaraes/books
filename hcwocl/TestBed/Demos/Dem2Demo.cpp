@@ -65,8 +65,8 @@ Dem2Demo::Dem2Demo(const DeviceDataBase* deviceData)
 	m_constBuffer.allocate<ConstBuffer>( m_deviceData, 1, DeviceBufferBase::BUFFER_CONST );
 
 	{
-		const char *option = "-I ..\\";
-		DKernelBuilder builder( m_deviceData, "Demos\\Dem2Demo", option, true );
+		const char *option = "-I ../";
+		DKernelBuilder builder( m_deviceData, "Demos/Dem2Demo", option, true );
 		builder.createKernel("CollideGridKernel", m_collisionKernel );
 		builder.createKernel("IntegrateKernel", m_integrateKernel );
 

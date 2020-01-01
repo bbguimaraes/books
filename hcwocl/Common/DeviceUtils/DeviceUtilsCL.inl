@@ -165,7 +165,8 @@ inline int DeviceUtilsCL::getNumDevices()
 		if( deviceType == CL_DEVICE_TYPE_GPU )
 		{
 			if( nvIdx != -1 ) platform = pIdx[nvIdx];
-			else platform = pIdx[atiIdx];
+			else if(atiIdx != -1) platform = pIdx[atiIdx];
+			else platform = pIdx[0];
 		}
 		else if( deviceType == CL_DEVICE_TYPE_CPU )
 		{
@@ -220,7 +221,8 @@ inline void DeviceUtilsCL::initDevice( DeviceDataBase* deviceDataBase, DriverTyp
 		if( deviceType == CL_DEVICE_TYPE_GPU )
 		{
 			if( nvIdx != -1 ) platform = pIdx[nvIdx];
-			else platform = pIdx[atiIdx];
+			else if(atiIdx != -1) platform = pIdx[atiIdx];
+			else platform = pIdx[0];
 		}
 		else if( deviceType == CL_DEVICE_TYPE_CPU )
 		{
@@ -335,7 +337,7 @@ inline void DeviceUtilsCL::waitForCompletion( const DeviceDataBase* deviceDataBa
 }
 
 template<>
-inline KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, char* fileName, const char* option, bool addExtension )
+inline KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, const char* fileName, const char* option, bool addExtension )
 {
 	char fileNameWithExtension[256];
 
@@ -375,7 +377,7 @@ inline KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, cha
 					str = new char[size + 1];
 					if (!str) {
 						f.close();
-						return  NULL;
+						return false;
 					}
 
 					// Read file
