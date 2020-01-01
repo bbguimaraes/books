@@ -4,7 +4,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
-#include <common/Math/Matrix3x3.h>
+#include <Common/Math/Matrix3x3.h>
 
 
 typedef float4 Quaternion;

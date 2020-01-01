@@ -1,12 +1,13 @@
 /*
 		2011 Takahiro Harada
 */
+#include <cstring>
+#include <stdio.h>
+#include <fstream>
+
 #include <CL/cl.h>
 #include <CL/cl_ext.h>
 #include <CL/cl_platform.h>
-
-#include <stdio.h>
-#include <fstream>
 
 struct DeviceDataCL : public DeviceDataBase
 {
@@ -567,7 +568,6 @@ void KernelLauncherCL::launch1DOnDevice( DeviceBufferCL& numElemsBuffer, u32 ali
 	CLASSERT(0);
 }
 
-#include <windows.h>
 #include <time.h>
 
 struct StopwatchCL

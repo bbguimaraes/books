@@ -1,8 +1,8 @@
 /*
 		2011 Takahiro Harada
 */
-#include <common/Math/Quaternion.h>
-#include <common/Math/Matrix3x3.h>
+#include <Common/Math/Quaternion.h>
+#include <Common/Math/Matrix3x3.h>
 
 __inline
 void glVertexFloat4( const float4& v )

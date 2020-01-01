@@ -4,8 +4,8 @@
 #ifndef AABB_H
 #define AABB_H
 
-#include <common/Math/Math.h>
-#include <common/Math/Quaternion.h>
+#include <Common/Math/Math.h>
+#include <Common/Math/Quaternion.h>
 
 _MEM_CLASSALIGN16
 struct Aabb

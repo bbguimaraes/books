@@ -3,8 +3,7 @@
 */
 #include <Demos/Dem2Demo.h>
 #include <Common/Utils/Stopwatch.h>
-#include <common/Math/RadixSortHost.h>
-#include <omp.h>
+#include <Common/Math/RadixSortHost.h>
 #include <Common/Base/ThreadPool.h>
 
 __inline

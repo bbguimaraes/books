@@ -7,8 +7,6 @@
 #include <string.h>
 #include <malloc.h>
 #include <Common/Base/Error.h>
-#include <new.h>
-
 
 template <class T>
 class Array

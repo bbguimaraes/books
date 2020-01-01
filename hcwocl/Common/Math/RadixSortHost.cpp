@@ -1,7 +1,7 @@
 /*
 		2011 Takahiro Harada
 */
-#include <common/Math/RadixSortHost.h>
+#include <Common/Math/RadixSortHost.h>
 
 void RadixSortHost::sort(SortData* data, SortData* workBuffer, int numElems)
 {

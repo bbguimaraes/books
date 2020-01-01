@@ -4,7 +4,6 @@
 #ifndef STOPWATCH_H
 #define STOPWATCH_H
 
-#include <windows.h>
 #include <time.h>
 
 class Stopwatch

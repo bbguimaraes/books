@@ -32,7 +32,7 @@ float g_translationZ = 0.0f;
 
 float g_fov = 35.f;
 
-#include <common/Utils/Stopwatch.h>
+#include <Common/Utils/Stopwatch.h>
 
 #include <Demos/Dem2Demo.h>
 

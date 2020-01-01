@@ -4,12 +4,13 @@
 #ifndef DEVICE_DRAW_H
 #define DEVICE_DRAW_H
 
+#include <GL/glut.h>
+
 #include <Common/Math/Math.h>
 #include <Common/DeviceUtils/DeviceUtils.h>
 #include <Common/Geometry/Aabb.h>
-
-#include <glut.h>
 #include <Common/DeviceUtils/DeviceDrawGL.inl>
+
 #define pxDrawLine(a,b,color) drawLine(a, b, color)
 #define pxDrawLineList(vtx,idx,nVtx,nIdx,color) drawLineList(vtx,idx,nVtx,nIdx,color)
 #define pxDrawPoint(a,color) drawPoint(a, color)

@@ -5,8 +5,6 @@
 #define THREAD_POOL_H
 
 #pragma warning( disable : 4996 )
-#include <windows.h>
-#include <process.h>
 #include <Common/Math/Math.h>
 
 class ThreadPool
