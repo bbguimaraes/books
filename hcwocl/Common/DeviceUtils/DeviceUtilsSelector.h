@@ -26,18 +26,18 @@ public:
 	class Builder : public KernelBuilder<KERNEL>
 	{
 	public:
-		Builder( const DeviceDataBase* deviceData, char* fileName, const char* option = NULL, bool addExtension = false ): KernelBuilder(deviceData, fileName, option, addExtension){}
+		Builder( const DeviceDataBase* deviceData, char* fileName, const char* option = NULL, bool addExtension = false ): KernelBuilder<KERNEL>(deviceData, fileName, option, addExtension){}
 	};
 
 	class Launcher : public KernelLauncher<BUFFER, KERNEL>
 	{
 	public:
-		Launcher( const DeviceDataBase* deviceData, KERNEL& kernel ):KernelLauncher( deviceData, kernel ){}
+		Launcher( const DeviceDataBase* deviceData, KERNEL& kernel ):KernelLauncher<BUFFER, KERNEL>( deviceData, kernel ){}
 	};
 };
 
 template<>
-DeviceDataBase* DUtilsBase<DeviceBufferCL, DeviceKernelCL>::createDeviceData()
+inline DeviceDataBase* DUtilsBase<DeviceBufferCL, DeviceKernelCL>::createDeviceData()
 {
 	DeviceDataBase* dd = new DeviceDataCL;
 	return dd;

@@ -79,6 +79,19 @@ typedef DeviceUtilsBase<DeviceBufferCL> DeviceUtilsCL;
 typedef KernelBuilder<DeviceKernelCL> KernelBuilderCL;
 typedef KernelLauncher<DeviceBufferCL, DeviceKernelCL> KernelLauncherCL;
 
+template<>
+inline void DeviceUtilsCL::deleteDeviceBuffer( const DeviceDataBase* deviceDataBase, DeviceBufferCL& deviceBuffer )
+{
+	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
+	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
+
+	if( deviceBuffer.m_buffer == 0 ) return;
+
+	if( deviceBuffer.m_buffer )
+		clReleaseMemObject( deviceBuffer.m_buffer );
+	deviceBuffer.m_buffer = 0;
+}
+
 template<typename T>
 void DeviceBufferCL::allocate(const DeviceDataBase* deviceData, int numElems, 
 	DeviceBufferBase::Type type)
@@ -122,7 +135,7 @@ void DeviceBufferCL::unmap(const DeviceDataBase* deviceDataBase, int numElems, M
 }
 
 template<>
-int DeviceUtilsCL::getNumDevices()
+inline int DeviceUtilsCL::getNumDevices()
 {
 	cl_device_type deviceType = CL_DEVICE_TYPE_GPU;
 	cl_int status;
@@ -168,7 +181,7 @@ int DeviceUtilsCL::getNumDevices()
 }
 
 template<>
-void DeviceUtilsCL::initDevice( DeviceDataBase* deviceDataBase, DriverType driverType, int deviceIdx )
+inline void DeviceUtilsCL::initDevice( DeviceDataBase* deviceDataBase, DriverType driverType, int deviceIdx )
 {
 	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
@@ -252,7 +265,7 @@ void DeviceUtilsCL::initDevice( DeviceDataBase* deviceDataBase, DriverType drive
 }
 
 template<>
-void DeviceUtilsCL::releaseDevice( DeviceDataBase* deviceDataBase )
+inline void DeviceUtilsCL::releaseDevice( DeviceDataBase* deviceDataBase )
 {
 	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
@@ -286,20 +299,6 @@ void DeviceUtilsCL::createDeviceBuffer( const DeviceDataBase* deviceDataBase, in
 	CLASSERT( status == CL_SUCCESS );
 }
 
-
-template<>
-void DeviceUtilsCL::deleteDeviceBuffer( const DeviceDataBase* deviceDataBase, DeviceBufferCL& deviceBuffer )
-{
-	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
-	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
-
-	if( deviceBuffer.m_buffer == 0 ) return;
-
-	if( deviceBuffer.m_buffer )
-		clReleaseMemObject( deviceBuffer.m_buffer );
-	deviceBuffer.m_buffer = 0;
-}
-
 template<>
 template<typename T>
 void DeviceUtilsCL::writeDataToDevice( const DeviceDataBase* deviceDataBase, int numElems, DeviceBufferCL& deviceBuffer, const void* hostPtr, int offsetNumElems )
@@ -327,7 +326,7 @@ void DeviceUtilsCL::readDataFromDevice( const DeviceDataBase* deviceDataBase, in
 }
 
 template<>
-void DeviceUtilsCL::waitForCompletion( const DeviceDataBase* deviceDataBase )
+inline void DeviceUtilsCL::waitForCompletion( const DeviceDataBase* deviceDataBase )
 {
 	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
@@ -336,7 +335,7 @@ void DeviceUtilsCL::waitForCompletion( const DeviceDataBase* deviceDataBase )
 }
 
 template<>
-KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, char* fileName, const char* option, bool addExtension )
+inline KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, char* fileName, const char* option, bool addExtension )
 {
 	char fileNameWithExtension[256];
 
@@ -426,7 +425,7 @@ KernelBuilderCL::KernelBuilder( const DeviceDataBase* deviceDataBase, char* file
 }
 
 template<>
-void KernelBuilderCL::createKernel( const char* funcName, DeviceKernelCL& kernelOut )
+inline void KernelBuilderCL::createKernel( const char* funcName, DeviceKernelCL& kernelOut )
 {
 	cl_program program = (cl_program)m_ptr;
     cl_int status = 0;
@@ -435,14 +434,14 @@ void KernelBuilderCL::createKernel( const char* funcName, DeviceKernelCL& kernel
 }
 
 template<>
-KernelBuilderCL::~KernelBuilderCL()
+inline KernelBuilder<DeviceKernelCL>::~KernelBuilder()
 {
 	cl_program program = (cl_program)m_ptr;
 	clReleaseProgram( program );
 }
 
 template<>
-void KernelBuilderCL::deleteKernel( const DeviceDataBase* deviceDataBase, DeviceKernelCL& kernel )
+inline void KernelBuilderCL::deleteKernel( const DeviceDataBase* deviceDataBase, DeviceKernelCL& kernel )
 {
 	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
@@ -455,7 +454,7 @@ void KernelBuilderCL::deleteKernel( const DeviceDataBase* deviceDataBase, Device
 }
 
 template<>
-KernelLauncherCL::KernelLauncher( const DeviceDataBase* deviceDataBase, DeviceKernelCL& kernel )
+inline KernelLauncherCL::KernelLauncher( const DeviceDataBase* deviceDataBase, DeviceKernelCL& kernel )
 {
 	CLASSERT( deviceDataBase->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)deviceDataBase;
@@ -467,13 +466,13 @@ KernelLauncherCL::KernelLauncher( const DeviceDataBase* deviceDataBase, DeviceKe
 }
 
 template<>
-KernelLauncherCL::~KernelLauncher()
+inline KernelLauncherCL::~KernelLauncher()
 {
 
 }
 
 template<>
-void KernelLauncherCL::pushBackR( const DeviceBufferCL& buffer )
+inline void KernelLauncherCL::pushBackR( const DeviceBufferCL& buffer )
 {
 //	OpenCLUtils::setKernelArg( m_kernel, m_idx++, buffer->m_buffer );
 	cl_int status = clSetKernelArg( m_kernel->m_kernel, m_idx++, sizeof(cl_mem), &buffer.m_buffer );
@@ -481,7 +480,7 @@ void KernelLauncherCL::pushBackR( const DeviceBufferCL& buffer )
 }
 
 template<>
-void KernelLauncherCL::pushBackRW( DeviceBufferCL& buffer, const int* counterInitValues )
+inline void KernelLauncherCL::pushBackRW( DeviceBufferCL& buffer, const int* counterInitValues )
 {
 	pushBackR( buffer );
 }
@@ -498,7 +497,7 @@ void KernelLauncherCL::setConst( const DeviceBufferCL& buffer, const T* hostData
 }
 
 template<>
-void KernelLauncherCL::launch1D( int numThreads, int localSize )
+inline void KernelLauncherCL::launch1D( int numThreads, int localSize )
 {
 	CLASSERT( m_deviceData->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)m_deviceData;
@@ -548,7 +547,7 @@ void KernelLauncherCL::launch1D( int numThreads, int localSize )
 }
 
 template<>
-void KernelLauncherCL::launch2D( int numThreadsX, int numThreadsY, int localSizeX, int localSizeY )
+inline void KernelLauncherCL::launch2D( int numThreadsX, int numThreadsY, int localSizeX, int localSizeY )
 {
 	CLASSERT( m_deviceData->m_type == DeviceDataBase::TYPE_CL );
 	DeviceDataCL* deviceData = (DeviceDataCL*)m_deviceData;
@@ -568,7 +567,7 @@ void KernelLauncherCL::launch2D( int numThreadsX, int numThreadsY, int localSize
 }
 
 template<>
-void KernelLauncherCL::launch1DOnDevice( DeviceBufferCL& numElemsBuffer, u32 alignedOffset, int localSize )
+inline void KernelLauncherCL::launch1DOnDevice( DeviceBufferCL& numElemsBuffer, u32 alignedOffset, int localSize )
 {
 	CLASSERT(0);
 }

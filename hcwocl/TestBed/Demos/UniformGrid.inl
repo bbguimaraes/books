@@ -20,15 +20,15 @@ UniformGrid<DEVICEBUFFER,DEVICEKERNEL>::UniformGrid( const DeviceDataBase* devic
 
 	{
 		int numCells = m_gProps.m_nCells.x*m_gProps.m_nCells.y*m_gProps.m_nCells.z;
-		m_gridCounter.allocate<int>( m_deviceData, numCells, (shareGPUCPU)? DeviceBufferBase::BUFFER_CPU_GPU: DeviceBufferBase::BUFFER_RAW );
-		m_grid.allocate<int>( m_deviceData, numCells*MAX_IDX_PER_GRID, (shareGPUCPU)? DeviceBufferBase::BUFFER_CPU_GPU: DeviceBufferBase::BUFFER );
-		m_cBuffer.allocate<GridProperties>( m_deviceData, 1, DeviceBufferBase::BUFFER_CONST );
+		m_gridCounter.template allocate<int>( m_deviceData, numCells, (shareGPUCPU)? DeviceBufferBase::BUFFER_CPU_GPU: DeviceBufferBase::BUFFER_RAW );
+		m_grid.template allocate<int>( m_deviceData, numCells*MAX_IDX_PER_GRID, (shareGPUCPU)? DeviceBufferBase::BUFFER_CPU_GPU: DeviceBufferBase::BUFFER );
+		m_cBuffer.template allocate<GridProperties>( m_deviceData, 1, DeviceBufferBase::BUFFER_CONST );
 	}
 
 	{
 		const char *option = "-I ..\\";
 
-		DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Builder builder( m_deviceData, "Demos\\UniformGridKernels", option, true );
+		typename DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Builder builder( m_deviceData, "Demos\\UniformGridKernels", option, true );
 		builder.createKernel("GridClearKernel", m_gridClearKernel );
 		builder.createKernel("GridConstructionKernel", m_gridConstructionKernel );
 	}
@@ -53,14 +53,14 @@ void UniformGrid<DEVICEBUFFER,DEVICEKERNEL>::clearAndBuild(const DEVICEBUFFER &p
 
 	{	//	clear grid count
 		int size = m_gProps.m_nCells.x*m_gProps.m_nCells.y*m_gProps.m_nCells.z;
-		DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Launcher launcher( m_deviceData, m_gridClearKernel );
+		typename DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Launcher launcher( m_deviceData, m_gridClearKernel );
 		launcher.pushBackRW( m_gridCounter );
 		launcher.setConst( m_cBuffer, &m_gProps );
 		launcher.launch1D( size );
 	}
 
 	{	//	grid construction
-		DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Launcher launcher( m_deviceData, m_gridConstructionKernel );
+		typename DUtilsBase<DEVICEBUFFER, DEVICEKERNEL>::Launcher launcher( m_deviceData, m_gridConstructionKernel );
 		launcher.pushBackR( pos );
 		launcher.pushBackRW( m_grid );
 		launcher.pushBackRW( m_gridCounter );
