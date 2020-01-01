@@ -4,7 +4,10 @@
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H
 
-#pragma warning( disable : 4996 )
+#include <future>
+#include <mutex>
+#include <thread>
+
 #include <Common/Math/Math.h>
 
 class ThreadPool
@@ -12,6 +15,7 @@ class ThreadPool
 	public:
 		struct Task
 		{
+			virtual ~Task() = default;
 			virtual u16 getType() = 0;
 			virtual void run(int tIdx) = 0;
 		};
@@ -42,7 +46,7 @@ class ThreadPool
 				void timestampReset();
 
 				static
-				u32 __stdcall run(void* args);
+				u32 run(void* args);
 
 				struct Timestamp
 				{
@@ -54,9 +58,9 @@ class ThreadPool
 				void pushBackTimeStamp(u16 type, float s, float e);
 
 			public:
-				u32 m_threadIdx;
-				HANDLE m_runSignal;
-				HANDLE m_finSignal;
+				std::thread m_thread;
+				std::promise<void> m_runSignal;
+				std::promise<void> m_finSignal;
 				ThreadArgs m_args;
 
 				enum
@@ -71,11 +75,9 @@ class ThreadPool
 		int m_nThreads;
 		bool m_deleteSignal;
 
-		CRITICAL_SECTION m_cs;
+		std::mutex m_mutex;
 		Thread* m_threads;
-
-		LARGE_INTEGER m_startTime;
-		LARGE_INTEGER m_frequency;
+		std::chrono::system_clock::time_point m_startTime;
 
 		enum
 		{
