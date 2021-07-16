@@ -163,7 +163,8 @@ struct SortData
 template<typename T>
 T* addByteOffset(void* baseAddr, u32 offset)
 {
-	return (T*)(((u32)baseAddr)+offset);
+	return static_cast<T*>(
+		static_cast<void*>(static_cast<char*>(baseAddr) + offset));
 }
 
 
