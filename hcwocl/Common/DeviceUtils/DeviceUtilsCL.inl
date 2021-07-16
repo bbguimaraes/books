@@ -248,8 +248,8 @@ inline void DeviceUtilsCL::initDevice( DeviceDataBase* deviceDataBase, DriverTyp
 		CLASSERT( status == CL_SUCCESS );
 
 		debugPrintf("Using %s\n", buff);
-
-		deviceData->m_commandQueues[i] = clCreateCommandQueue( deviceData->m_contexts[i], deviceData->m_deviceIds[i], (enableProfiling)?CL_QUEUE_PROFILING_ENABLE:NULL, NULL );
+		const cl_command_queue_properties props = (enableProfiling)?CL_QUEUE_PROFILING_ENABLE:0;
+		deviceData->m_commandQueues[i] = clCreateCommandQueueWithProperties(deviceData->m_contexts[i], deviceData->m_deviceIds[i], &props, NULL);
 
 		CLASSERT( status == CL_SUCCESS );
 
