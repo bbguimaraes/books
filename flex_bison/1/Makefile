@@ -1,4 +1,4 @@
-SUBDIRS = 1
+SUBDIRS = calc0 calc1 calc2 calc3 calc4 ex1 ex2 ex3 ex4 ex6 wc
 
 .PHONY: all clean
 all:
