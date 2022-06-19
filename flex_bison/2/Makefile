@@ -1,4 +1,4 @@
-SUBDIRS = 1 2
+SUBDIRS = wc0 wc1 include concordance cross ex1 ex2 ex3
 
 .PHONY: all clean
 all:
