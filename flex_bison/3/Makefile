@@ -1,4 +1,4 @@
-SUBDIRS = 1 2 3
+SUBDIRS = calc0 calc1
 
 .PHONY: all clean
 all:
